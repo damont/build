@@ -522,3 +522,9 @@ return (
 - [ ] All views reachable via URL navigation
 - [ ] Browser back/forward works correctly
 - [ ] Page refresh preserves the current view
+
+---
+
+## Optional: Google Sign-In button + email verification UX
+
+If the backend ships Google Sign-In and/or mandatory email verification (see Phase 02's optional section), read `${CLAUDE_SKILL_DIR}/references/google-auth.md` for the frontend counterparts: `GoogleOAuthProvider` in `main.tsx`, the `GoogleLogin` button in Login/Register, the `/verify-email/:token` route + component, and the "Check your inbox" flow after registration.

@@ -20,7 +20,7 @@ Sequential phases for building a full-stack application. Feed these to an agent 
 | 05 | [Frontend Foundation](05-frontend-foundation.md) | Frontend | React app skeleton, API client, auth, routing |
 | 06 | [Frontend Features](06-frontend-features.md) | Frontend | Feature components, URL design, mobile-first patterns |
 | 07 | [Frontend Testing](07-frontend-testing.md) | Frontend | Vitest + React Testing Library setup and patterns |
-| 08 | [Docker & Deploy](08-docker-and-deploy.md) | DevOps | Dockerfile, Compose, nginx, deployment (Pi or Azure) |
+| 08 | [Docker & Deploy](08-docker-and-deploy.md) | DevOps | Dockerfile, Compose, nginx, deployment (Pi, Azure, or AWS) |
 | 09 | [Cross-App Features](09-cross-app-features.md) | Full-stack | GitHub feedback |
 | 10 | [Agent Auth & API](10-agent-auth-and-api.md) | Backend | Agent token endpoint, OpenAPI schema exposure |
 

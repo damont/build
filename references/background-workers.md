@@ -76,6 +76,7 @@ import asyncio
 import json
 import logging
 from redis.asyncio import Redis
+from redis.exceptions import ConnectionError as RedisConnectionError, TimeoutError as RedisTimeoutError
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -97,7 +98,9 @@ def handles(topic: str):
 
 
 async def run_worker(redis_url: str, topics: list[str], group: str = "workers", consumer: str = "worker-1"):
-    redis = Redis.from_url(redis_url, decode_responses=True)
+    # socket_keepalive matters when Redis is reached through a proxy (e.g. the
+    # Azure Container Apps ingress) — see the deploy note below.
+    redis = Redis.from_url(redis_url, decode_responses=True, socket_keepalive=True)
 
     # Ensure consumer groups exist
     for topic in topics:
@@ -111,9 +114,15 @@ async def run_worker(redis_url: str, topics: list[str], group: str = "workers", 
     while True:
         # Read from all topics, block up to 5 seconds
         streams = {topic: ">" for topic in topics}
-        results = await redis.xreadgroup(group, consumer, streams, count=10, block=5000)
+        # When Redis is behind a proxy (Container Apps ingress), a blocking
+        # XREADGROUP that returns nothing can surface as a client read timeout —
+        # treat it as "no messages" and retry rather than crash. Harmless locally.
+        try:
+            results = await redis.xreadgroup(group, consumer, streams, count=10, block=5000)
+        except (RedisTimeoutError, RedisConnectionError):
+            continue
 
-        for topic, messages in results:
+        for topic, messages in results or []:
             for message_id, fields in messages:
                 try:
                     data = json.loads(fields["data"])
@@ -249,7 +258,7 @@ Only add this when the app actually needs background workers.
 |-------------|-------|-------|
 | **Local dev** | `redis:7-alpine` in Docker Compose | Just works, no setup needed |
 | **Pi (Path A)** | Same `redis:7-alpine` in Docker Compose | Lightweight, runs fine on Pi. Volume persists data |
-| **Azure (Path B)** | Azure Cache for Redis (Basic C0 tier) or a Redis container in the ACI group | For low-traffic apps, a Redis container in ACI is cheapest |
+| **Azure (Path B)** | `redis:7-alpine` as an internal **Container App** (TCP :6379, always-on) | Classic Azure Cache for Redis is blocked for new creates and Azure Managed Redis is ~$50–75/mo — so self-host the container. The worker reaches it through the env ingress proxy, so the blocking `XREADGROUP` needs the `socket_keepalive` + `TimeoutError`-retry handling shown above, and the worker scales from zero via a KEDA `redis-streams` rule. See Phase 08 → Path B for the full setup. |
 
 ---
 

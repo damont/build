@@ -1,11 +1,11 @@
 ---
-name: newbuild
+name: build
 description: Initialize a new full-stack application following sequential build phases (FastAPI + React + Docker)
 argument-hint: [project-name] [phase-number]
 allowed-tools: Bash(*), Read, Write, Edit, Glob, Grep, Agent
 ---
 
-# New Build: $0
+# Build: $0
 
 ## Available Phases
 !`ls -1 ${CLAUDE_SKILL_DIR}/phases/ | sed 's/\.md$//'`
@@ -37,9 +37,10 @@ Read `${CLAUDE_SKILL_DIR}/phases/$1-*.md` (glob for the matching phase file) and
 
 ### Reference Documents
 
-If the project needs file storage or background workers, read the relevant reference doc:
+If the project needs file storage, background workers, or Google auth, read the relevant reference doc:
 - `${CLAUDE_SKILL_DIR}/references/file-storage.md` — for file upload/download
 - `${CLAUDE_SKILL_DIR}/references/background-workers.md` — for async processing
+- `${CLAUDE_SKILL_DIR}/references/google-auth.md` — for Google Sign-In and/or mandatory email verification (the exact Toolshed implementation)
 
 Only pull these in when the project actually needs the capability.
 

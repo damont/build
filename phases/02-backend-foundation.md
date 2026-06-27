@@ -467,4 +467,10 @@ curl -X POST http://localhost:8020/api/auth/reset-password \
 - [ ] `curl /api/health` returns `{"status": "ok"}`
 - [ ] Can register a user, login, and call `/api/auth/me` with the token
 - [ ] Forgot password sends reset link (logged to console in dev, emailed in production)
+
+---
+
+## Optional: Google Sign-In + mandatory email verification
+
+If the project requires Google Sign-In and/or email verification on registration, read `${CLAUDE_SKILL_DIR}/references/google-auth.md` before running this phase. It patches the `User` model, `Settings`, DTOs, and `auth.py` routes with the exact Toolshed implementation — do the baseline phase first, then apply the reference's diffs on top.
 - [ ] Reset password with valid token updates the password

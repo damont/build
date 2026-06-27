@@ -29,7 +29,7 @@ Scaffold the project structure, configure dependencies, and make key decisions (
 | Frontend framework | React 19 + TypeScript | Vite for bundling |
 | Styling | Tailwind CSS v4 | Utility-first, no custom CSS framework |
 | Containerization | Docker + Docker Compose | Multi-stage builds |
-| Deployment target | Raspberry Pi **or** Azure | See Phase 08 |
+| Deployment target | Raspberry Pi, Azure, **or** AWS | See Phase 08 |
 
 ---
 
@@ -37,12 +37,14 @@ Scaffold the project structure, configure dependencies, and make key decisions (
 
 Decide now — it affects project structure and CI/CD:
 
-| | **Path A: Raspberry Pi** | **Path B: Azure** |
-|---|---|---|
-| **Best for** | Internal/family apps, low traffic | Public-facing apps, external users |
-| **Database** | MongoDB on Pi (shared) | MongoDB Atlas |
-| **Cost** | Free (already running) | Azure pay-per-use |
-| **Examples** | `calendarapp`, `track` | `toolshed` |
+| | **Path A: Raspberry Pi** | **Path B: Azure** | **Path C: AWS** |
+|---|---|---|---|
+| **Best for** | Internal/family apps, low traffic | Public-facing apps, external users | Public apps, cheapest managed/idle |
+| **Hosting** | Self-hosted Docker + Cloudflare Tunnel | Azure Container Apps (scale-to-zero) | Lambda + API Gateway + CloudFront |
+| **Async work** | In-process / host | Always-on Redis + KEDA worker | SNS → per-handler Lambdas (nothing always-on) |
+| **Database** | MongoDB on Pi (shared) | MongoDB Atlas | MongoDB Atlas |
+| **Cost** | Free (already running) | ~$35–50/mo (always-on Redis) | ~$0–5/mo (pay-per-request) |
+| **Examples** | `calendarapp`, `track` | `toolshed` | `recall` |
 
 ---
 
