@@ -1,14 +1,23 @@
-# Build Phases
+# Build
 
-Sequential phases for building a full-stack application (FastAPI + React + Docker). Feed them to an agent one at a time, in order.
+A skill for building, reviewing, and assessing full-stack apps (FastAPI + React + Docker) against one set of conventions. It has **three modes**, chosen by the first argument:
 
-## How to Use
+| Command | Mode | What it does |
+|---------|------|--------------|
+| `/build new [project] [phase]` | **new** | Scaffold/continue a phased build (the phases below) |
+| `/build review [scope]` | **review** | Review the current git branch's changes against the conventions (read-only) |
+| `/build assess [subtree]` | **assess** | Audit the whole repo for conformance with the conventions (read-only) |
+
+`review` and `assess` check against [`conventions.md`](conventions.md) — the audit rubric distilled from the phase docs (which stay canonical). See [`SKILL.md`](SKILL.md) for how each mode runs.
+
+## Building (mode: `new`)
+
+Sequential phases, fed to an agent one at a time, in order.
 
 1. Start at Phase 01 and work through sequentially
 2. Each phase assumes all prior phases are complete
 3. Each phase ends with a checklist — verify before moving to the next
 4. Make the **decisions** below as they come up, and pull in the matching **reference doc** when the app needs that capability
-5. To check an existing codebase against these conventions (or review an agent's changes), use the companion **[`build-review`](https://github.com/damont/build-review)** skill
 
 ## Decisions to Make
 
@@ -63,4 +72,5 @@ Pull these in during any phase when the app needs the capability:
 ## Notes
 
 - Phases 02–04 (backend) and 05–07 (frontend) can run in parallel if two agents work simultaneously
-- Reviewing conformance is a separate skill: **`build-review`** audits a whole codebase or just a diff against these conventions
+- `review` and `assess` are read-only — they report severity-rated findings (Violation / Gap / Note / Conforms), they don't change code
+- When the phase docs change, update [`conventions.md`](conventions.md) so the audit rubric stays in sync
